@@ -18,8 +18,8 @@ public:
       	int aft = 0;
       	for(int i = 0; i < s.size(); i++)  
       	{
+      		pre = c2n(s[i]);
       		if(i > 0){
-      			pre = c2n(s[i]);
       			aft = c2n(s[i - 1]);
       		}
         	if(pre > aft)  
