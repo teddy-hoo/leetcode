@@ -5,8 +5,8 @@ private:
   }
 public:
   int minPathSum(vector<vector<int> > &grid) {
-    int row = grid.size();
-    int column = grid[0].size();
+    int         row    = grid.size();
+    int         column = grid[0].size();
     vector<vector<int> > result;
     vector<int> path;
 
