@@ -9,14 +9,14 @@
  */
 class Solution {
 public:
-  int minDepth(TreeNode *root) {
-    queue<TreeNode*> q;
-    TreeNode* pot;
-    if(!root){
-      return 0;
+    int minDepth(TreeNode *root) {
+        if(root == NULL) return 0;
+        
+        if(root->left == NULL) 
+          return minDepth(root->right)+1;
+        else if(root->right == NULL) 
+          return minDepth(root->left)+1;
+        else 
+          return min(minDepth(root->left), minDepth(root->right))+1;
     }
-    TreeNode* flag = new TreeNode(-9999);
-    q.push(root);
-    q.push(flag);
-  }
 };
