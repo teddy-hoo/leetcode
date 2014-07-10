@@ -17,6 +17,6 @@ public:
     }
     TreeNode* flag = new TreeNode(-9999);
     q.push(root);
-    
+    q.push(flag);
   }
 };
