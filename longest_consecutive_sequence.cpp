@@ -1,30 +1,24 @@
-int longestConsecutive(vector<int> &num) {
-  unordered_map<int, int> hashmap;
-  for(int i =0; i < num.size(); i++){
-    hashmap[num[i]] = i;
-  }
-  vector<int> visited(num.size(), 0);
-  int maxV = INT_MIN;
-  for(int i = 0; i < num.size(); i++){
-    if(visited[i] == 1){
-      continue;
+class Solution {
+public:
+    set<int> flag;
+    int findBound(int n , bool asc){
+        int ans = 0;
+        set<int>::iterator iter;
+        while((iter = flag.find(n)) != flag.end()){
+            flag.erase(iter);
+            ans ++;
+            if(asc) n-- ; else n++;
+        }
+        return ans;
     }
-    visited[i] = 1;
-    int len = 1;
-    int index = num[i] - 1;
-    while(hashmap.find(index) != hashmap.end()){
-      visited[hashmap[index]] = 1;
-      index--;
-      len++;
+    int longestConsecutive(vector<int> &num) {
+        int ans = 0;
+        flag.clear();
+        for(int i = 0 ; i < num.size() ; i++)
+           flag.insert(num[i]);
+        for(int i = 0 ; i < num.size(); i++){
+            ans = max(findBound(num[i],true) + findBound(num[i]+1,false) , ans); 
+        }
+        return ans;
     }
-    index = num[i] + 1;
-    while(hashmap.find(index) != hashmap.end()){
-      visited[hashmap[index]] = 1;
-      index++;
-      len++;
-    }
-    if(len > maxV)
-      maxV = len;
-  }
-  return maxV;
-}
+};
