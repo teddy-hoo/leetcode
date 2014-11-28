@@ -15,9 +15,7 @@ public:
         TreeNode* cur;
         if(!root)
             return result;
-        s.push(root);
-        result.push_back(root->val);
-        cur = root->left;
+        cur = root;
         while(!s.empty() || cur){
             while(cur){
                 s.push(cur);
