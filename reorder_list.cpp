@@ -7,28 +7,67 @@
  * };
  */
 class Solution {
-public:
-    void reorderList(ListNode *head) {
-        if(!head)
-            return;
-        vector<ListNode*> cache;
-        ListNode* p;
-        ListNode* newhead = new ListNode(0);
-        int i, j;
-        for(p = head; p != NULL; p = p->next){
-            cache.push_back(p);
-        }
-        for(p = newhead, i = 0, j = cache.size() - 1; i < j; ++i, --j){
-            p->next = cache[i];
-            p = p->next;
-            p->next = cache[j];
-            p = p->next;
-        }
-        if(i == j){
-            p->next = cache[i];
-            p = p->next;
-        }
-        p->next = NULL;
-        head = newhead->next;
+private:
+  ListNode *seperate(ListNode *head){
+
+    ListNode *fast = head;
+    ListNode *slow = head;
+
+    while(fast->next != NULL && fast->next->next != NULL){
+      slow = slow->next;
+      fast = fast->next->next;
     }
+
+    fast       = slow;
+    slow       = slow->next;
+    fast->next = NULL;
+
+    return slow;
+
+  }
+
+  ListNode* reverse(ListNode *head){
+
+    ListNode *newList = new ListNode(0);
+    ListNode *p   = newList;
+
+    while(head != NULL){
+      ListNode *tmp = head->next;
+      head->next    = p->next;
+      p->next       = head;
+      head          = tmp;
+    }
+
+    head = newList->next;
+    delete(newList);
+
+    return head;
+  }
+
+  ListNode *merge(ListNode *first, ListNode *second){
+
+    ListNode *head = first;
+    ListNode *tmp;
+
+    while(second != NULL){
+      tmp          = second->next;
+      second->next = first->next;
+      first->next  = second;
+      first        = second->next;
+      second       = tmp;
+    }
+
+    return head;
+  }
+public:
+  void reorderList(ListNode *head) {
+
+    if(head == NULL || head->next == NULL){
+      return;
+    }
+
+    ListNode *middle  = seperate(head);
+    ListNode *newList = reverse(middle);
+    head              = merge(head, newList);
+  }
 };
