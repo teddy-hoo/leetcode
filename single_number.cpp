@@ -1,15 +1,16 @@
 class Solution {
 public:
     int singleNumber(int A[], int n) {
-        map<int, int> numlist;
-        for(int i = 0; i < n; i++){
-            if (numlist.find(A[i]) != numlist.end())
-                numlist[A[i]] = -1;
-            else
-                numlist[A[i]] = i;
+        if(n <= 0){
+            return -1;
         }
-        for(map<int, int>::iterator iter = numlist.begin(); iter != numlist.end(); iter++)
-            if(iter->second != -1)
-                return iter->first;
+        
+        int xorResult = A[0];
+        
+        for(int i = 1; i < n; i++){
+            xorResult ^= A[i];
+        }
+        
+        return xorResult;
     }
 };
