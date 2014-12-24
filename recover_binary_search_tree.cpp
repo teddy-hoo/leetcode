@@ -25,13 +25,19 @@ private:
 				cur = s.top();
 				s.pop();
 				if(preNode != NULL && preNode->val > cur->val){
-					results.push(results.size() == 0 ? preNode : cur);
+				    results.push_back(preNode);
+				    results.push_back(cur);
 				}
 				preNode = cur;
 				cur = cur->right;
 			}
 		}
 		return results;
+	}
+	void swapValue(int &val1, int &val2){
+		int tmp = val1;
+		val1 = val2;
+		val2 = tmp;
 	}
 public:
     void recoverTree(TreeNode *root) {
@@ -41,9 +47,11 @@ public:
         vector<TreeNode *> swappedNodes;
 
         swappedNodes = findSwappedNode(root);
-        if(swappedNodes.size() > 2 || swappedNodes.size() <= 0){
-        	return;
+        if(swappedNodes.size() == 2){
+            swapValue(swappedNodes[0]->val, swappedNodes[1]->val);
         }
-       	swappedNodes[0]->val = swappedNodes[1]->val;
+        else if(swappedNodes.size() == 4){
+            swapValue(swappedNodes[0]->val, swappedNodes[3]->val);
+        }
     }
 };
