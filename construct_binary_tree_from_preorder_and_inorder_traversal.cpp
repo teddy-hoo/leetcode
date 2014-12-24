@@ -34,7 +34,7 @@ private:
 		int newLenLeft = rootPos;
 		int newLenRight = len - newLenLeft - 1;
 		root->left = buildBinaryTree(beginIn, beginPre + 1, newLenLeft);
-		root->right = buildBinaryTree(beginIn + newLenLeft + 1, beginIn + newLenLeft + 1, newLenRight);
+		root->right = buildBinaryTree(beginIn + newLenLeft + 1, beginPre + newLenLeft + 1, newLenRight);
 		return root;
 	}
 
