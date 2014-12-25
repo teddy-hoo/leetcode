@@ -18,8 +18,8 @@ private:
                     subsets.push_back(subset);
                     start++;
                     end--;
-                    while(start < end && num[start] == num[start + 1]) start++;
-                    while(start < end && num[end] == num[end - 1]) end--;
+                    while(start < end && num[start] == num[start - 1]) start++;
+                    while(start < end && num[end] == num[end + 1]) end--;
                 }
                 else if(num[start] + num[end] > left){
                     end--;
