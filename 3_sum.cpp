@@ -1,27 +1,35 @@
 class Solution {
 private:
-    map<int, int> buildMap(vector<int> num){
-        map<int, int> m;
-        for(int i = 0; i < num.size(); i++){
-            m[num[i]] = i;
-        }
-        return m;
-    }
-    vector<vector<int> > calSum(vector<int> num, map<int, int> m){
+    vector<vector<int> > calSum(vector<int> num){
         vector<vector<int> > subsets;
         vector<int> subset;
-        map<int, int>::iterator iter;
+        int len = num.size();
         
-        for(int i = 0; i < num.size(); i++){
-            for(int j = i + 1; j < num.size(); j++){
-                iter = m.find(0 - num[i] - num[j]);
-                if(iter != m.end() && iter->second > j){
+        for(int i = 0; i < len; i++){
+            int start = i + 1;
+            int end = len - 1;
+            int left = 0 - num[i];
+            while(start < end){
+                if(num[start] + num[end] == left){
                     subset.clear();
                     subset.push_back(num[i]);
-                    subset.push_back(num[j]);
-                    subset.push_back(iter->first);
+                    subset.push_back(num[start]);
+                    subset.push_back(num[end]);
                     subsets.push_back(subset);
+                    start++;
+                    end--;
+                    while(start < end && num[start] == num[start + 1]) start++;
+                    while(start < end && num[end] == num[end - 1]) end--;
                 }
+                else if(num[start] + num[end] > left){
+                    end--;
+                }
+                else{
+                    start++;
+                }
+            }
+            while(i < len && num[i] == num[i + 1]){
+                i++;
             }
         }
         return subsets;
@@ -29,7 +37,6 @@ private:
 public:
     vector<vector<int> > threeSum(vector<int> &num) {
         sort(num.begin(), num.end());
-        map<int, int> m = buildMap(num);
-        return calSum(num, m);
+        return calSum(num);
     }
 };
