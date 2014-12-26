@@ -8,7 +8,7 @@ public:
         memset(locs, -1, sizeof(int) * 256);
 
         for(int i = 0; i < s.size(); i++){
-        	if(locs[s[i]] < 0{
+        	if(locs[s[i]] < 0){
         		locs[s[i]] = i;
         		len++;
         	}
