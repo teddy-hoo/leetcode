@@ -2,28 +2,26 @@ class Solution {
 public:
     int lengthOfLongestSubstring(string s) {
         int len = 0;
-        map<char, int> m;
         int max = 0;
         int start = 0;
+		int locs[256];  
+        memset(locs, -1, sizeof(int) * 256);
 
         for(int i = 0; i < s.size(); i++){
-        	map<char, int>::iterator iter;
-        	iter = m.find(s[i]);
-        	if(iter == m.end()){
-        		m[s[i]] = i;
+        	if(locs[s[i]] < 0{
+        		locs[s[i]] = i;
         		len++;
         	}
         	else{
-        		if(iter->second < start){
+        		if(locs[s[i]] < start){
         			len++;
         		}
         		else{
-        			int pos = iter->second;
         			max = max > len ? max : len;
-        			len = i - pos;
-        			start = i;
+        			len = i - locs[s[i]];
+        			start = locs[s[i]] + 1;
         		}
-        		iter->second = i;
+        		locs[s[i]] = i;
         	}
         }
 
