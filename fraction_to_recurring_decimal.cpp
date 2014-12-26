@@ -1,27 +1,5 @@
-// method
-// 1. calculate quotient and remainder
-// 2. convent quetient and remainder to string seperaterly
-// have a try tomorrow
-
 class Solution {
 private:
-	float calDecimal(int numerator, int denominator){
-		float result = 0;
-		float base = 1;
-		int preQuotient = numerator;
-		while(numerator != 0){
-			base /= 10;
-			int quotient = numerator * 10 / denominator;
-			int remainder = numerator * 10 % denominator;
-			result += quotient * base;
-			numerator = remainder;
-			if(preQuotient == quotient){
-				break;
-			}
-			preQuotient = quotient;
-		}
-		return result;
-	}
 	void reverse(string &str){
 		int begin = 0;
 		int end = str.size() - 1;
@@ -29,38 +7,62 @@ private:
 			char tmp = str[begin];
 			str[begin] = str[end];
 			str[end] = tmp;
+			begin++;
+			end--;
 		}
 	}
-	string decimalToString(float decimal){
-		string result = "";
-		int intPart = decimal;
-		float decPart = decimal - ((int)decimal);
-		do{
-			int remainder = intPart % 10;
-			result += remainder + '0';
-			intPart /= 10;
-		}while(intPart != 0);
-		reverse(result);
-		if(decPart != 0){
-			result += '.';
+	string remainderToString(long long int remainder, int denominator){
+		string str = "";
+		int preValue = remainder;
+		while(remainder != 0){
+			remainder = remainder * 10;
+			int quotient = remainder / denominator;
+			str += quotient + '0';
+			if(quotient == preValue){
+				break;
+			}
+			preValue = quotient;
+			remainder = remainder % denominator;
 		}
-		while(decPart != 0){
-			int tmp = decPart * 10;
-			result += tmp + '0';
-			decPart = decimal * 10 - ((int)(decimal * 10));
+		if(str.size() >= 2 && str[str.size() - 1] == str[str.size() - 2]){
+			str[str.size() - 2] = '(';
+			str += ')';
 		}
-		if(result.size() >= 2 && result[result.size() - 1] == result[result.size() - 2]){
-			result[result.size() - 2] = '(';
-			result += ')';
+		return str;
+	}
+	string quotientToString(int quotient){
+		string str = "";
+		if(quotient == 0){
+			return str + "0";
 		}
-		return result;
+		while(quotient != 0){
+			int remainder = quotient % 10;
+			str += remainder + '0';
+			quotient = quotient / 10;
+		}
+		reverse(str);
+		return str;
 	}
 public:
 	string fractionToDecimal(int numerator, int denominator) {
 		if(denominator == 0){
 			return NULL;
 		}
-		float decimal = calDecimal(numerator, denominator);
-		return decimalToString(decimal);
+		int quotient = numerator / denominator;
+		long long int remainder = numerator % denominator;
+		string result = "";
+		if(numerator == 0){
+			return "0";
+		}
+		if(numerator < 0 ^ denominator < 0 ) {
+			result += '-';
+		}
+		string quetientStr = quotientToString(quotient);
+		string remainderStr = remainderToString(remainder, denominator);
+		if(remainderStr != ""){
+			quetientStr += ".";
+			quetientStr += remainderStr;
+		}
+		return quetientStr;
 	}
 };
