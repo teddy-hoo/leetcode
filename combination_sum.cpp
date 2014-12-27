@@ -1,7 +1,7 @@
 class Solution {
 public:
     vector<vector<int> > combinationSum(vector<int> &candidates, int target) {
-        vector<vector<int> >results;
+        vector<vector<int> > results;
         int len = candidates.size();
         if(len <= 0){
             return results;
@@ -13,7 +13,7 @@ public:
         sum += candidates[0];
         while(sindex >= 0){
             if(sum < target){
-                s[++sindex] = s[sindex - 1];
+                s[++sindex] = s[sindex];
                 sum += candidates[s[sindex]];
             }
             else{
@@ -24,15 +24,18 @@ public:
                     }
                     results.push_back(result);
                 }
+                int pos = s[sindex];
                 sum -= candidates[s[sindex]];
                 sindex--;
-                while(sindex >= 0 || s[sindex] + 1 >= len){
+                while(sindex >= 0 && pos + 1 >= len){
+                    pos = s[sindex];
+                    sum -= candidates[s[sindex]];
                     sindex--;
                 }
-                if(sindex < 0){
+                if(pos + 1 >= len){
                     break;
                 }
-                s[++sindex] = s[sindex] + 1;
+                s[++sindex] = pos + 1;
                 sum += candidates[s[sindex]];
             }
         }
