@@ -6,37 +6,43 @@ public:
         if(len <= 0){
             return results;
         }
+        sort(candidates.begin(), candidates.end());
         int sum = 0;
-        int s[1000];
-        int sindex = 0;
-        s[0] = 0;
+        vector<int> stk;
+        stk.push_back(0);
         sum += candidates[0];
-        while(sindex >= 0){
+        while(stk.size() >= 0){
             if(sum < target){
-                s[++sindex] = s[sindex];
-                sum += candidates[s[sindex]];
+                int p = stk.back();
+                stk.push_back(p);
+                sum += candidates[p];
             }
             else{
                 if(sum == target){
                     vector<int> result;
-                    for(int i = 0; i <= sindex; i++){
-                        result.push_back(candidates[s[i]]);
+                    for(int i = 0; i < stk.size(); i++){
+                        result.push_back(candidates[stk[i]]);
                     }
                     results.push_back(result);
                 }
-                int pos = s[sindex];
-                sum -= candidates[s[sindex]];
-                sindex--;
-                while(sindex >= 0 && pos + 1 >= len){
-                    pos = s[sindex];
-                    sum -= candidates[s[sindex]];
-                    sindex--;
+                int pos = stk.back();
+                sum -= candidates[pos];
+                stk.pop_back();
+                if(stk.size() > 0){
+                    pos = stk.back();
+                    sum -= candidates[pos];
+                    stk.pop_back();
+                }
+                while(stk.size() > 0 && pos + 1 >= len){
+                    pos = stk.back();
+                    sum -= candidates[stk.back()];
+                    stk.pop_back();
                 }
                 if(pos + 1 >= len){
                     break;
                 }
-                s[++sindex] = pos + 1;
-                sum += candidates[s[sindex]];
+                stk.push_back(pos + 1);
+                sum += candidates[stk.back()];
             }
         }
         return results;
