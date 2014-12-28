@@ -1,52 +1,52 @@
 class Solution {
 private:
-	int setValue(int **cache, int row, int col){
-		int sum = 1;
-		if(i - 1 >= 0 && j - 1 >= 0){
-			if(cache[i - 1][j - 1] == 0){
-				sum += cache[i - 1][j] > cache[i][j - 1] ? cache[i - 1][j] : cache[i][j - 1];
-			}
-			else if(cache[i - 1][j] == 0){
-				if(cache[i][j - 1] != 0){
-					sum += cache[i][j - 1] - cache[i - 1][j - 1];
+	int largestRectangleArea(vector<vector<char> > &height, int index) {
+	    int len = height.size();
+	    if(len <= 0){
+	    	return 0;
+	    }
+	    vector<int> stackOfHeight;
+	    int maxArea = 0;
+	    for(int i = 0; i < len; i++){
+	    	if(stackOfHeight.size() <= 0 || height[i][index] >= height[stackOfHeight.back()][index]){
+	    		stackOfHeight.push_back(i);
+	    		continue;
+	    	}
+	    	int curIndex = stackOfHeight.back();
+	    	stackOfHeight.pop_back();
+	    	int newArea = (height[curIndex][index] - '0') * (stackOfHeight.size() <= 0 ? i : i - stackOfHeight.back() - 1);
+	    	maxArea = maxArea > newArea ? maxArea : newArea;
+	    	i--;
+	    }
+	    return maxArea;
+	}
+	void calculateRows(vector<vector<char> > &matrix){
+		int row = matrix.size();
+		int col = matrix[0].size();
+		for(int i = 0; i < row; i++){
+			for(int j = 1; j < col; j++){
+				if(matrix[i][j] != '0'){
+					matrix[i][j] = matrix[i][j] + matrix[i][j - 1] - '0';
 				}
 			}
-			else if(cache[i][j - 1] == 0){
-				sum += cache[i - 1][j] - cache[i - 1][j - 1];
-			}
-			else{
-				sum += cache[i - 1][j] + cache[i][j - 1] - cache[i - 1][j - 1];
-			}
-		}
-		else if(i - 1 >= 0){
-			sum += cache[i - 1][j];
-		}
-		else if(j - 1 >= 0){
-			sum += cache[i][j - 1];
 		}
 	}
 public:
     int maximalRectangle(vector<vector<char> > &matrix) {
-        int height = matrix.size();
-        if(height <= 0){
+        if(matrix.size() <= 0){
         	return 0;
         }
-        int width = matrix[0].size();
-        int cache[height][width];
-        int max = 0;
-
-        for(int i = 0; i < height; i++){
-        	for(int j = 0; j < width; j++){
-        		if(matrix[i][j] == '0'){
-        			cache[i][j] = 0;
-        			continue;
-        		}
-        		int sum = setValue(cache, i , j);
-        		max = sum > max ? sum : max;
-        		cache[i][j] = sum;
-        	}
+        calculateRows(matrix);
+        vector<char> extra;
+        for(int i = 0; i < matrix[0].size(); i++){
+        	extra.push_back('0');
         }
-
+        matrix.push_back(extra);
+        int max = 0;
+        for(int i = 0; i < matrix[0].size(); i++){
+        	int curMax = largestRectangleArea(matrix, i);
+        	max = max > curMax ? max : curMax;
+        }
         return max;
     }
 };
