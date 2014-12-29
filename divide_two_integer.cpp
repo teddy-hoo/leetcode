@@ -1,6 +1,40 @@
 #define MAX_INT 2147483647
 
 class Solution {
+private:
+    int searchResult(int dividend, int divisor){
+        int result = 0;
+        while(1){
+            int base = 1;
+            int middleBase = divisor;
+            int cachedBase = -1;
+            int preBase = 0;
+            while(middleBase < dividend && middleBase > cachedBase){
+                cachedBase = middleBase;
+                middleBase = middleBase << 1;
+                preBase = base;
+                base = base << 1;
+            }
+            if(middleBase == dividend){
+                result += base;
+                return result;
+            }
+            if(base == 1){
+                return result;
+            }
+            if(middleBase <= cachedBase){
+                dividend -= cachedBase;
+                result += preBase;
+            }
+            else{
+                dividend -= middleBase >> 1;
+                result += base >> 1;
+            }
+            cout << dividend << endl;
+            cout << base << endl;
+            cout << result << endl;
+        }
+    }
 public:
     int divide(int dividend, int divisor) {
         if(divisor == 0){
@@ -9,8 +43,6 @@ public:
         if(dividend == 0){
             return 0;
         }
-        int small = 0;
-        int large = dividend;
         bool nagtive = false;
         if(dividend < 0 ^ divisor < 0){
             nagtive = true;
@@ -21,26 +53,7 @@ public:
         if(divisor < 0){
             divisor = 0 - divisor;
         }
-        int quotient = 1;
-        while(small < large){
-            cout << small << " " << large << endl;
-            int middle = (small + large) >> 1;
-            cout << middle << endl;
-            int iter = 0;
-            for(int i = 0; i < middle; i++){
-                iter += divisor;
-            }
-            cout << iter << endl;
-            if(iter == dividend){
-                return middle;
-            }
-            else if(iter < dividend){
-                small = middle + 1;
-            }
-            else{
-                large = middle - 1;
-            }
-        }
-        return large;
+        int result = searchResult(dividend, divisor);
+        return nagtive ? 0 - result : result;
     }
 };
