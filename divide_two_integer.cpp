@@ -2,14 +2,14 @@
 
 class Solution {
 private:
-    int searchResult(int dividend, int divisor){
-        int result = 0;
+    unsigned int searchResult(long long int dividend, long long int divisor){
+        unsigned int result = 0;
         while(1){
-            int base = 1;
-            int middleBase = divisor;
-            int cachedBase = -1;
-            int preBase = 0;
-            while(middleBase < dividend && middleBase > cachedBase){
+            long long int base = 1;
+            long long int middleBase = divisor;
+            long long int cachedBase = -1;
+            long long int preBase = 0;
+            while(middleBase < dividend){
                 cachedBase = middleBase;
                 middleBase = middleBase << 1;
                 preBase = base;
@@ -22,38 +22,34 @@ private:
             if(base == 1){
                 return result;
             }
-            if(middleBase <= cachedBase){
-                dividend -= cachedBase;
-                result += preBase;
-            }
-            else{
-                dividend -= middleBase >> 1;
-                result += base >> 1;
-            }
-            cout << dividend << endl;
-            cout << base << endl;
-            cout << result << endl;
+            dividend -= middleBase >> 1;
+            result += base >> 1;
         }
     }
 public:
     int divide(int dividend, int divisor) {
-        if(divisor == 0){
+        long long int dvd = dividend;
+        long long int dvs = divisor;
+        if(dividend == -2147483648 && divisor == -1){
             return MAX_INT;
         }
-        if(dividend == 0){
+        if(dvs == 0){
+            return MAX_INT;
+        }
+        if(dvd == 0){
             return 0;
         }
         bool nagtive = false;
-        if(dividend < 0 ^ divisor < 0){
+        if(dvd < 0 ^ dvs < 0){
             nagtive = true;
         }
-        if(dividend < 0){
-            dividend = 0 - dividend;
+        if(dvd < 0){
+            dvd = 0 - dvd;
         }
-        if(divisor < 0){
-            divisor = 0 - divisor;
+        if(dvs < 0){
+            dvs = 0 - dvs;
         }
-        int result = searchResult(dividend, divisor);
+        unsigned int result = searchResult(dvd, dvs);
         return nagtive ? 0 - result : result;
     }
 };
