@@ -1,21 +1,32 @@
 class Solution {
 private:
-    int findDot(string s){
+    vector<string> split(string s, char divider){
+        vector<string> parts;
         int len = s.size();
-        for(int i = 0; i < len; i++){
-            if(s[i] == '.'){
-                return i;
+        int start = 0;
+        int i = 0;
+        for(; i < len; i++){
+            if(s[i] == divider){
+                string sub = trim(s.substr(start, i - start));
+                parts.push_back(sub);
+                start = i + 1;
             }
         }
-        return -1;
+        if(start < i){
+            string sub = trim(s.substr(start, i - start));
+            parts.push_back(sub);
+        }
+        return parts;
     }    
-    int compareDigits(string s1, int begin1, int end1, string s2, int begin2, int end2){
-        int len1 = end1 - begin1;
-        int len2 = end2 - begin2;
+    int compareDigits(string s1, string s2){
+        int len1 = s1.size();
+        int len2 = s2.size();
         if(len1 != len2){
             return len1 > len2 ? 1 : -1;
         }
-        while(begin1 < end1 && begin2 < end2){
+        int begin1 = 0;
+        int begin2 = 0;
+        while(begin1 < len1 && begin2 < len2){
             if(s1[begin1] > s2[begin2]){
                 return 1;
             }
@@ -27,31 +38,36 @@ private:
         }
         return 0;
     }
-    void removeZero(string s, int &begin, int &end){
-        while(begin <= end && s[begin] == '0'){
+    string trim(string s){
+        int begin = 0;
+        int end = s.size();
+        while(begin < end && s[begin] == '0'){
             begin++;
         }
-//        while(end >= begin && s[end] == '0'){
-//            end--;
-//        }
+        if(begin == end){
+            return "";
+        }
+        return s.substr(begin, end);
     }
 public:
     int compareVersion(string version1, string version2) {
-        int begin1 = 0;
-        int end1 = version1.size() - 1;
-        int begin2 = 0;
-        int end2 = version2.size() - 1;
-        removeZero(version1, begin1, end1);
-        removeZero(version2, begin2, end2);
-        int dot1 = findDot(version1);
-        int dot2 = findDot(version2);
-        int mid1 = dot1 == -1 ? end1 + 1 : dot1;
-        int mid2 = dot2 == -1 ? end2 + 1 : dot2;
-        int versionCompare = compareDigits(version1, begin1, mid1, version2, begin2, mid2);
-        if(versionCompare != 0){
-            return versionCompare;
+        vector<string> v1 = split(version1, '.');
+        vector<string> v2 = split(version2, '.');
+        int i = 0;
+        for(; i < v1.size() && i < v2.size(); i++){
+            int versionCompare = compareDigits(v1[i], v2[i]);
+            if(versionCompare != 0){
+                return versionCompare;
+            }
         }
-        int subVersionCompare = compareDigits(version1, mid1 + 1, end1 + 1, version2, mid2 + 1, end2 + 1);
-        return subVersionCompare;
+        if(i != v1.size() && v1[i].size() > 0){
+            return 1;
+        }
+        else if(i != v2.size() && v2[i].size() > 0){
+            return -1;
+        }
+        else{
+            return 0;
+        }
     }
 };
