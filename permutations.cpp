@@ -21,7 +21,7 @@ private:
             }
         }
     }
-public:  
+public:
     vector<vector<int> > permute(vector<int> &num) {  
         vector<vector<int> > results;
         int len = num.size();
@@ -31,6 +31,6 @@ public:
         vector<bool> used(len, false);
         vector<int> indices;
         searchPermute(num, indices, results, used);
-        return results;  
+        return results;
     }
 };
