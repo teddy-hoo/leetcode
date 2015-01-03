@@ -1,4 +1,19 @@
 class Solution {
+private:
+    vector<int> insertValue(vector<int> permutation, int pos){
+        bool inserted = false;
+        vector<int> permutation;
+        for(int k = 0; k <= results[j].size(); k++){
+            if(k == pos){
+                permutation.push_back(num[i]);
+                inserted = true;
+            }
+            else{
+                permutation.push_back(inserted ? results[j][k - 1] : results[j][k]);
+            }
+        }
+        return permutation;
+    }
 public:
     vector<vector<int> > permute(vector<int> &num) {  
         vector<vector<int> > results;
@@ -14,18 +29,7 @@ public:
             vector<vector<int> > newResults;
             for(int j = 0; j < results.size(); j++){
                 for(int insert = 0; insert <= max; insert++){
-                    bool inserted = false;
-                    vector<int> permutation;
-                    for(int k = 0; k <= results[j].size(); k++){
-                        if(k == insert){
-                            permutation.push_back(num[i]);
-                            inserted = true;
-                        }
-                        else{
-                            permutation.push_back(inserted ? results[j][k - 1] : results[j][k]);
-                        }
-                    }
-                    newResults.push_back(permutation);
+                    newResults.push_back(insertValue(results[j], insert));
                 }
             }
             results = newResults;
