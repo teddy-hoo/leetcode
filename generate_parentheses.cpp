@@ -1,20 +1,24 @@
 class Solution {
-public:
-  void gp(string str,int l,int r, int &n, vector<string> &res){
-    if (l>n){return;}
-    if (l==n && r==n){
-      res.push_back(str);
-    }else{
-      gp(str+"(",l+1,r,n,res);
-      if (l>r){
-        gp(str+")",l,r+1,n,res);
-      }
+private:
+  void recursion(string result, int left, int right, vector<string> &results){
+    if(left == 0 && right == 0){
+      results.push_back(result);
+      return;
+    }
+    if(left > 0){
+      recursion(result + '(', left - 1, right, results);
+    }
+    if(left < right){
+      recursion(result + ')', left, right - 1, results);
     }
   }
-  vector<string> generateParenthesis(int n) {
-    vector<string> res;
-    if (n==0){return res;}
-    gp("",0,0,n,res);
-    return res;
+public:
+  vector<string> generateParenthesis(int n){
+    vector<string> results;
+    if(n <= 0){
+      return results;
+    }
+    recursion("", n, n, results);
+    return results;
   }
 };
