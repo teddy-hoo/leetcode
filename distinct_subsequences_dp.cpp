@@ -26,8 +26,7 @@ public:
                 int pre = is == 0 ? 0 : cached[it][is - 1];
                 int cur = 0;
                 if(S[is] == T[it]){
-                    pre++;
-                    cur = it > 0 ? cached[it - 1][is - 1] : 0;
+                    cur = it > 0 ? cached[it - 1][is - 1] : 1;
                 }
                 cached[it][is] = pre + cur;
             }
