@@ -1,63 +1,67 @@
-#include<string>
-#include<iostream>
-#include<vector>
-
-using namespace std;
-
 class Solution {
-    void findNextEmptyCell(vector<vector<char> > board, int &row, int &col){
+private:
+    bool findSolution(vector<vector<char> > &board, int row, int col, 
+        bool existRow[100][100], bool existCol[100][100], bool existArea[100][100]){
         int rowNum = board.size();
         int colNum = board[0].size();
-      
-        while(row < rowNum){
-            if(board[row][col] == '.'){
-                return;
-            }
-            col++;
-            row = col >= colNum ? row + 1 : row;
-            col = col >= colNum ? 0 : col;
-        }
-    }
-    bool isValid(vector<vector<char> > board, int row, int col, char value){
-        int rowNum = board.size();
-        int colNum = board[0].size();
-        
-        for(int i = 0; i < row; i++){
-            if(board[i][col] == value){
-                return false;
-            }
-        }
-        
-        for(int i = 0; i < col; i++){
-            if(board[row][i] == value){
-                return false;
-            }
-        }
-        
-        return true;
-    }
-    bool findSolution(vector<vector<char> > &board, int row, int col){
-        int rowNum = board.size();
-        int colNum = board[0].size();
-        
-        findNextEmptyCell(board, row, col);
-        
+
         if(row >= rowNum){
             return true;
         }
+
+        if(col >= colNum){
+            return findSolution(board, row + 1, 0, existRow, existCol, existArea);
+        }
+
+        if(board[row][col] != '.'){
+            return findSolution(board, row, col + 1, existRow, existCol, existArea);
+        }
         
-        int max = colNum + '0';
-        for(char cellValue = '1'; cellValue <= max; cellValue++){
-            if(isValid(board, row, col, cellValue)){
-                board[row][col] = cellValue;
-                if(findSolution(board, row, col)){
-                    return true;
-                }
-                board[row][col] = '.';
+        int area = (row / 3) * 3 + col / 3;
+        for(int v = 0; v < rowNum; v++){
+            if(existRow[row][v] || existCol[col][v] || existArea[area][v]){
+                continue;
             }
+            existRow[row][v] = true;
+            existCol[col][v] = true;
+            existArea[area][v] = true;
+            board[row][col] = v + '1';
+            if(findSolution(board, row, col + 1, existRow, existCol, existArea)){
+                return true;
+            }
+            board[row][col] = '.';
+            existRow[row][v] = false;
+            existCol[col][v] = false;
+            existArea[area][v] = false;
         }
 
         return false;
+    }
+    bool initExist(vector<vector<char> > board, bool existRow[100][100],
+        bool existCol[100][100], bool existArea[100][100]){
+        int rowNum = board.size();
+        int colNum = board[0].size();
+
+        for(int i = 0; i < rowNum; i++){
+            for(int j = 0; j < colNum; j++){
+                if(board[i][j] == '.'){
+                    continue;
+                }
+
+                int value = board[i][j] - '1';
+                int area = (i / 3) * 3 + j / 3;
+                if(existRow[i][value] ||
+                    existCol[j][value] ||
+                    existArea[area][value]){
+                    return false;
+                }
+                existRow[i][value] = true;
+                existCol[j][value] = true;
+                existArea[area][value] = true;
+            }
+        }
+
+        return true;
     }
 public:
     void solveSudoku(vector<vector<char> > &board) {
@@ -65,125 +69,18 @@ public:
         if(board.size() == 0){
             return;
         }
+
+        bool existRow[100][100];
+        bool existCol[100][100];
+        bool existArea[100][100];
+        memset(existRow, false, sizeof(existRow));
+        memset(existCol, false, sizeof(existCol));
+        memset(existArea, false, sizeof(existArea));
+        if(!initExist(board, existRow, existCol, existArea)){
+            return;
+        }
         
-        findSolution(board, 0, 0);
+        findSolution(board, 0, 0, existRow, existCol, existArea);
 
     }
 };
-
-int main(){
-
-    vector<vector<char> > board;
-    vector<char> row;
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('9');
-    row.push_back('7');
-    row.push_back('4');
-    row.push_back('8');
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('.');
-    board.push_back(row);
-    row.clear();
-    row.push_back('7');
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('.');
-    board.push_back(row);
-    row.clear();
-    row.push_back('.');
-    row.push_back('2');
-    row.push_back('.');
-    row.push_back('1');
-    row.push_back('.');
-    row.push_back('9');
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('.');
-    board.push_back(row);
-    row.clear();
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('7');
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('2');
-    row.push_back('4');
-    row.push_back('.');
-    board.push_back(row);
-    row.clear();
-    row.push_back('.');
-    row.push_back('6');
-    row.push_back('4');
-    row.push_back('.');
-    row.push_back('1');
-    row.push_back('.');
-    row.push_back('5');
-    row.push_back('9');
-    row.push_back('.');
-    board.push_back(row);
-    row.clear();
-    row.push_back('.');
-    row.push_back('9');
-    row.push_back('8');
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('3');
-    row.push_back('.');
-    board.push_back(row);
-    row.clear();
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('8');
-    row.push_back('.');
-    row.push_back('3');
-    row.push_back('.');
-    row.push_back('2');
-    row.push_back('.');
-    board.push_back(row);
-    row.clear();
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('6');
-    board.push_back(row);
-    row.clear();
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('.');
-    row.push_back('2');
-    row.push_back('7');
-    row.push_back('5');
-    row.push_back('9');
-    row.push_back('.');
-    board.push_back(row);
-    row.clear();
-
-    Solution sol;
-    sol.solveSudoku(board);
-
-    for(int i = 0; i < 9; i++){
-        for(int j = 0; j < 9; j++){
-            cout << board[i][j];
-        }
-        cout << endl;
-    }
-
-    return 0;
-}
