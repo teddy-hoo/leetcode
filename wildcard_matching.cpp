@@ -1,44 +1,28 @@
 class Solution {
 public:
     bool isMatch(const char *s, const char *p) {
-        
-        if(*s == '\0' && *p == '\0'){
-            return true;
-        }
-        
-        if(*s == '\0' || *p == '\0'){
-            return false;
-        }
-        
-        while(*s != '\0' && *p != '\0'){
-            if(*p == '*'){
-                if(*(p + 1) != '*' && *s != *(p + 1)){
-                    s++;
-                    continue;
-                }
-                if(isMatch(s, p + 1)){
-                    return true;
-                }
-                s++;
-                if(*s == '\0'){
-                    if(isMatch(s, p + 1)){
-                        return true;
-                    }
-                }
-            }
-            else if(*p == '?' || *s == *p){
-                s++;
+
+        bool star = false;
+        const char *s1, *p1;
+        while( *s && (*p || star) ){
+            if (*p=='?' || *s == *p){
+                s++; p++;
+            }else if (*p=='*'){
+                star = true;
                 p++;
-            }
-            else{
-                return false;
+                if (*p=='\0') return true;
+                s1 = s;
+                p1 = p;
+            }else{
+                if (star==false) return false;
+                p = p1;
+                s = ++s1; 
             }
         }
-        
-        if(*s != '\0' || *p != '\0'){
-            return false;
+        if (*s=='\0') {
+            while (*p=='*') p++;
+            if (*p=='\0') return true;
         }
-        
-        return true;
+        return false;
     }
 };
