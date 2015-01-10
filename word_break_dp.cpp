@@ -1,25 +1,24 @@
 class Solution {
 private:
-	bool canBeBreak(string s, int index, unordered_set<string> dict){
-		int len = s.size();
-		unordered_set<string>::iterator iter;
-
-		if(index == len){
+	vector<vector<bool> > genEmptyVector(int len){
+		vector<vector<bool> > flags;
+		for(int i = 0; i < len; i++){
+			vector<bool> row(len, false);
+			flags.push_back(row);
+		}
+		return flags;
+	}
+	bool checkPre(vector<vector<bool> > flags, int row){
+		if(row == 0){
 			return true;
 		}
-
-		for(int i = index; i < len; i++){
-			string sub = s.substr(index, i - index  + 1);
-			iter = dict.find(sub);
-			if(iter != dict.end()){
-				if(canBeBreak(s, i + 1, dict)){
-				    return true;
-				}
+		int pre = row - 1;
+		for(int i = 0; i < row; i++){
+			if(flags[i][pre]){
+				return true;
 			}
 		}
-
 		return false;
-
 	}
 public:
     bool wordBreak(string s, unordered_set<string> &dict) {
@@ -28,6 +27,25 @@ public:
   			return true;
   		}
 
-  		return canBeBreak(s, 0, dict);
+  		unordered_set<string>::iterator iter;
+  		vector<vector<bool> > flags = genEmptyVector(len);
+
+  		for(int i = 0; i < len; i++){
+  			for(int j = i; j < len; j++){
+  				string sub = s.substr(i, j - i + 1);
+  				iter = dict.find(sub);
+  				if(iter == dict.end()){
+  					continue;
+  				}
+  				if(checkPre(flags, i)){
+  					if(j == len - 1){
+  						return true;
+  					}
+  					flags[i][j] = true;
+  				}
+  			}
+  		}
+
+  		return false;
     }
 };
