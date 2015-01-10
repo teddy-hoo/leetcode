@@ -30,7 +30,10 @@ public:
   		unordered_set<string>::iterator iter;
   		vector<vector<bool> > flags = genEmptyVector(len);
 
+  		int begin = 0;
+  		int j;
   		for(int i = 0; i < len; i++){
+  			begin = -1;
   			for(int j = i; j < len; j++){
   				string sub = s.substr(i, j - i + 1);
   				iter = dict.find(sub);
@@ -41,8 +44,14 @@ public:
   					if(j == len - 1){
   						return true;
   					}
+  					if(begin == -1){
+  						begin = j;
+  					}
   					flags[i][j] = true;
   				}
+  			}
+  			if(begin != -1){
+  				i = begin;
   			}
   		}
 
