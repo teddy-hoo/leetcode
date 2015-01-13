@@ -1,36 +1,42 @@
 class Solution {
 private:
-    void searchPermute(vector<int> num, vector<int> &indices, vector<vector<int> > &results, vector<bool> &used){
+    void generate(vector<int> num, vector<int> &result, vector<vector<int> > &results, vector<bool> &used){
         int len = num.size();
-        if(indices.size() == len){
-            vector<int> result;
-            for(int i = 0; i < len; i++){
-                result.push_back(num[indices[i]]);
-            }
+        if(result.size() == len){
             results.push_back(result);
+            return;
         }
-        else{
-            for(int i = 0; i < len; i++){
-                if(!used[i]){
-                    used[i] = true;
-                    indices.push_back(i);
-                    searchPermute(num, indices, results, used);
-                    used[i] = false;
-                    indices.pop_back();
-                }
+        set<int> s;
+        set<int>::iterator iter;
+        for(int i = 0; i < len; i++){
+            if(used[i]){
+                continue;
             }
+            iter = s.find(num[i]);
+            if(iter != s.end()){
+                continue;
+            }
+            s.insert(num[i]);
+            used[i] = true;
+            result.push_back(num[i]);
+            generate(num, result, results, used);
+            used[i] = false;
+            result.pop_back();
         }
     }
 public:
-    vector<vector<int> > permute(vector<int> &num) {  
-        vector<vector<int> > results;
+    vector<vector<int> > permuteUnique(vector<int> &num) {
         int len = num.size();
+        vector<vector<int> > results;
+        
         if(len <= 0){
             return results;
         }
+        
         vector<bool> used(len, false);
-        vector<int> indices;
-        searchPermute(num, indices, results, used);
+        vector<int> result;
+        generate(num, result, results, used);
+        
         return results;
     }
-};
+}
