@@ -1,10 +1,42 @@
 class Solution {
 private:
-    void dfs(unordered_set<string> dict, string start, string end,
-        vector<string> path, map<string, bool> &dis, 
-        vector<vector<string> > &results, int &minlen){
+    map<string, vector<string> > graph;
+    vector<vector<string> > results;
+    string des;
+    bool converted(string s1, string s2){
+        int identical = 0;
+        int len = s1.size();
+        for(int i = 0; i < len; i++){
+            if(s1[i] == s2[i]){
+                identical++;
+            }
+        }
+        return identical == len - 1;
+    }
+    map<string, vector<string> > buildGraph(unordered_set<string> dict,
+        map<string, bool> &visited){
+        unordered_set<string>::iterator i;
+        unordered_set<string>::iterator j;
+        map<string, vector<string> > graph;
         
-        if(start == end){
+        for(i = dict.begin(); i != dict.end(); i++){
+            vector<string> neighbors;
+            for(j = dict.begin(); j != dict.end(); j++){
+                if(*i != *j && converted(*i, *j)){
+                    neighbors.push_back(*j);
+                }
+            }
+            graph[*i] = neighbors;
+            visited[*i] = false;
+        }
+        
+        return graph;
+    }
+    void dfs(vector<string> path, int &minlen, map<string, bool> visited){
+        
+        string start = path.back();
+
+        if(start == des){
             results.push_back(path);
             minlen = path.size() < minlen ? path.size() : minlen;
             return;
@@ -14,19 +46,15 @@ private:
             return;
         }
         
-        for(int i = 0; i < start.size(); i++){
-            string tmp = start;
-            for(char j = 'a'; j <= 'z'; j++){
-                tmp[i] = j;
-                if(tmp == end ||
-                    (dict.count(tmp) > 0 && 
-                        (dis.count(tmp) == 0 || !dis[tmp]))){
-                    path.push_back(tmp);
-                    dis[tmp] = true;
-                    dfs(dict, tmp, end, path, dis, results, minlen);
-                    dis[tmp] = false;
-                    path.pop_back();
-                }
+        vector<string> neighbors = graph[start];
+        for(int i = 0; i < neighbors.size(); i++){
+            string neighbor = neighbors[i];
+            if(!visited[neighbor]){
+                visited[neighbor] = true;
+                path.push_back(neighbor);
+                dfs(path, minlen, visited);
+                visited[neighbor] = false;
+                path.pop_back();
             }
         }
     }
@@ -34,15 +62,20 @@ public:
     vector<vector<string> > findLadders(string start, string end, 
       unordered_set<string> &dict) {
 
-        vector<vector<string> > results;
+        dict.insert(start);
+        dict.insert(end);
+        
+        map<string, bool> visited;
+        graph = buildGraph(dict, visited);
+
         vector<string> path;
         path.push_back(start);
 
-        map<string, bool> dis;
-        dis[start] = true;
         int minlen = dict.size() + 1;
+        visited[start] = true;
+        des = end;
 
-        dfs(dict, start, end, path, dis, results, minlen);
+        dfs(path, minlen, visited);
 
         int min = dict.size() + 1;
         for(int i = 0; i < results.size(); i++){
@@ -57,7 +90,6 @@ public:
                 newResults.push_back(results[i]);
             }
         }
-
 
         return newResults;
     }
