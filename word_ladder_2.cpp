@@ -4,15 +4,17 @@ private:
         string start, string end){
 
         map<string, vector<string> > graph;
-        map<string, bool> visited;
+        set<string> visited;
+        visited.insert(start);
+        visited.insert(end);
 
         queue<string> q;
         q.push(start);
         bool reachEnd = false;
-        int cur = 1;
         int next = 0;
+        int cur = 1;
 
-        while(!q.empty() && cur != 0){
+        while(!q.empty() && cur > 0){
             
             string str = q.front();
             q.pop();
@@ -29,15 +31,15 @@ private:
                         reachEnd = true;
                         neighbors.push_back(tmp);
                     }
-                    else if(!reachEnd &&  dict.count(tmp) > 0 && visited.count(tmp) == 0){
+                    else if(!reachEnd && dict.count(tmp) > 0 && visited.count(tmp) == 0){
                         next++;
-                        visited[tmp] = true;
+                        visited.insert(tmp);
                         neighbors.push_back(tmp);
                         q.push(tmp);
                     }
                 }
             }
-
+            
             cur--;
             if(cur == 0 && !reachEnd){
                 cur = next;
@@ -63,7 +65,12 @@ private:
             return;
         }
         
-        vector<string> neighbors = graph[start];
+        map<string, vector<string> >::iterator iter;
+        iter = graph.find(start);
+        if(iter == graph.end()){
+            return;
+        }
+        vector<string> neighbors = iter->second;
         for(int i = 0; i < neighbors.size(); i++){
             path.push_back(neighbors[i]);
             dfs(graph, path, end, results);
