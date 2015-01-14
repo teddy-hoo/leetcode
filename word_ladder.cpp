@@ -2,12 +2,13 @@ class Solution {
 private:
     bool converted(string s1, string s2){
         int identical = 0;
-        for(int i = 0; i < s1.size(); i++){
+        int len = s1.size();
+        for(int i = 0; i < len; i++){
             if(s1[i] == s2[i]){
                 identical++;
             }
         }
-        return identical == 2;
+        return identical == len - 1;
     }
     map<string, vector<string> > buildGraph(unordered_set<string> dict, map<string, bool> &visited){
         unordered_set<string>::iterator i;
