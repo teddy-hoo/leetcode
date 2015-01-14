@@ -12,9 +12,19 @@ private:
     int capac;
     Node* head;
     Node* tail;
-    Node* tmp;
     map<int, Node*> cache;
     map<int, Node*>::iterator iter;
+private:
+    void pushtohead(Node* target){
+        target->next = head->next;
+        head->next = target;
+        target->pre = head;
+        target->next->pre = target;
+    }
+    void withdraw(Node *cur){
+        cur->pre->next = cur->next;
+        cur->next->pre = cur->pre;
+    }
 public:
     LRUCache(int capacity) {
         head = new Node(0, 0);
@@ -29,10 +39,8 @@ public:
         iter = cache.find(key);
         if(iter == cache.end())
             return -1;
-        tmp = iter->second;
-        tmp->pre->next = tmp->next;
-        tmp->next->pre = tmp->pre;
-        pushtohead(tmp);
+        withdraw(iter->second);
+        pushtohead(iter->second);
         return iter->second->value;
     }
     
@@ -40,34 +48,23 @@ public:
         iter = cache.find(key);
         if(iter != cache.end()){
             iter->second->value = value;
-            tmp = iter->second;
-            tmp->pre->next = tmp->next;
-            tmp->next->pre = tmp->pre;
-            pushtohead(tmp);
+            withdraw(iter->second);
+            pushtohead(iter->second);
         }
         else if(count < capac){
-            tmp = new Node(key, value);
+            Node *tmp = new Node(key, value);
             cache.insert(pair<int, Node*>(key, tmp));
             pushtohead(tmp);
             count++;
         }
         else{
-            tmp = new Node(key, value);
+            Node *tmp = new Node(key, value);
             pushtohead(tmp);
             cache.insert(pair<int, Node*>(key, tmp));
-            tmp = tail->pre;
-            tmp->pre->next = tail;
-            tail->pre = tmp->pre;
-            cache.erase(cache.find(tmp->key));
-            delete(tmp);
-            count++;
+            Node *removed = tail->pre;
+            withdraw(removed);
+            cache.erase(cache.find(removed->key));
+            delete(removed);
         }
-    }
-private:
-    void pushtohead(Node* target){
-        target->next = head->next;
-        head->next = target;
-        target->pre = head;
-        target->next->pre = target;
     }
 };
