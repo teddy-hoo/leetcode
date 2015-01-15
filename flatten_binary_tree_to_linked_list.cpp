@@ -8,32 +8,48 @@
  * };
  */
 class Solution {
+private:
+    void genQueue(TreeNode *root, queue<TreeNode*> &q){
+        stack<TreeNode*> s;
+        TreeNode *curNode = root;
+
+        while(!s.empty() || curNode != NULL){
+            while(curNode != NULL){
+                q.push(curNode);
+                s.push(curNode);
+                curNode = curNode->left;
+            }
+            if(!s.empty()){
+                curNode = s.top();
+                s.pop();
+                curNode = curNode->right;
+            }
+        }
+    }
+    void buildNewTree(queue<TreeNode*> q){
+        TreeNode *curNode;
+        curNode = q.front();
+        curNode->left = NULL;
+        curNode->right = NULL;
+        q.pop();
+        while(!q.empty()){
+            curNode->right = q.front();
+            q.pop();
+            curNode = curNode->right;
+            curNode->left = NULL;
+            curNode->right = NULL;
+        }
+    }
 public:
     void flatten(TreeNode *root) {
         if(root == NULL){
         	return;
         }
-        stack<TreeNode*> stk;
-        TreeNode *curNode;
-        TreeNode *newList = new TreeNode(0);
-        TreeNode *pList = newList;
-        TreeNode *newNode;
 
-        curNode = root;
-        while(!stk.empty() || curNode != NULL){
-        	while(curNode != NULL){
-        		newNode = new TreeNode(curNode->val);
-        		pList->right = newNode;
-        		pList = pList->right;
-        		stk.push(curNode);
-        		curNode = curNode->left;
-        	}
-        	if(!stk.empty()){
-        		curNode = stk.top();
-        		stk.pop();
-        		curNode = curNode->right;
-        	}
-        }
-        *root = *(newList->right);
+        queue<TreeNode*> q;
+
+        genQueue(root, q);
+        buildNewTree(q);        
+
     }
 };
