@@ -8,21 +8,40 @@
  * };
  */
 class Solution {
+private:
+    bool calHeight(TreeNode *root, int &height){
+        if(root == NULL){
+            height = 0;
+            return true;
+        }
+
+        int leftHeight = 0;
+        if(!calHeight(root->left, leftHeight)){
+            return false;
+        }
+        int rightHeight = 0;
+        if(!calHeight(root->right, rightHeight)){
+            return false;
+        }
+
+        if(abs(leftHeight - rightHeight) > 1){
+            return false;
+        }
+
+        height = leftHeight > rightHeight ? leftHeight + 1 : rightHeight + 1;
+
+        return true;
+
+    }
 public:
     bool isBalanced(TreeNode *root) {
-        if(!root)
+        
+        if(root == NULL){
             return true;
-        int left = getDepth(root->left);
-        int right = getDepth(root->right);
-        if(left - right > 1 || left - right < -1)
-            return false;
-        return isBalanced(root->left) && isBalanced(root->right);
-    }
-    int getDepth(TreeNode* root){
-        if(!root)
-            return 0;
-        int left = getDepth(root->left);
-        int right = getDepth(root->right);
-        return 1 + (right > left? right : left);
+        }
+
+        int height = 0;
+        return calHeight(root, height);
+
     }
 };
