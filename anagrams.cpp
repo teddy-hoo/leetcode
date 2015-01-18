@@ -1,8 +1,8 @@
 class Solution {
 private:
-    map<string, vector<int> > genCache(vector<string> strs){
-        map<string, vector<int> > cache;
-        map<string, vector<int> >::iterator iter;
+    unordered_map<string, vector<int> > genCache(vector<string> strs){
+        unordered_map<string, vector<int> > cache;
+        unordered_map<string, vector<int> >::iterator iter;
         vector<int> indexes;
         for(int i = 0; i < strs.size(); i++){
             string str = strs[i];
@@ -22,8 +22,8 @@ private:
 public:
     vector<string> anagrams(vector<string> &strs) {
         vector<string> result;
-        map<string, vector<int> > cache = genCache(strs);
-        map<string, vector<int> >::iterator iter = cache.begin();
+        unordered_map<string, vector<int> > cache = genCache(strs);
+        unordered_map<string, vector<int> >::iterator iter = cache.begin();
         while(iter != cache.end()){
             vector<int> indexes = iter->second;
             if(indexes.size() > 1){
