@@ -1,17 +1,25 @@
 class Solution {
 public:
     int findPeakElement(const vector<int> &num) {
-        int low = 0, high = num.size() - 1;
+        int len = num.size();
 
-        while (low <= high) {
-            int mid  = (low + high) >> 1;
-            bool isUphillForward = (mid == 0 ? true : num[mid] > num[mid - 1]);
-            bool isUphillAfter = (mid == num.size() - 1 ? false : num[mid + 1] > num[mid]);
-            if (isUphillForward && !isUphillAfter) return mid;
-            else if (isUphillForward && isUphillAfter) low = mid + 1;
-            else high = mid - 1;
+        if(len <= 0){
+            return -1;
         }
 
-        return low;
+        int begin = 0;
+        int end = len - 1;
+        while(begin < end){
+            int middle = (begin + end) >> 1;
+            int next = middle + 1;
+            if(num[middle] < num[next]){
+                begin = next;
+            }
+            else{
+                end = middle;
+            }
+        }
+
+        return begin;
     }
 };
