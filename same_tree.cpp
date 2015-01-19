@@ -10,34 +10,47 @@
 class Solution {
 public:
     bool isSameTree(TreeNode *p, TreeNode *q) {
-        queue<TreeNode*> t1;
-        queue<TreeNode*> t2;
-        TreeNode* p1;
-        TreeNode* p2;
-        if(p != NULL)
-            t1.push(p);
-        if(q != NULL)
-            t2.push(q);
-        while(!t1.empty() && !t2.empty()){
-            p1 = t1.front();
-            t1.pop();
-            p2 = t2.front();
-            t2.pop();
-            if(p1->val != p2->val || (p1->left != NULL && p2->left == NULL) || (p1->left == NULL && p2->left != NULL)
-            || (p1->right != NULL && p2->right == NULL) || (p1->right == NULL && p2->right != NULL))
+        if((p == NULL) ^ (q == NULL)){
+            return false;
+        }
+
+        TreeNode *p1 = p;
+        TreeNode *p2 = q;
+        stack<TreeNode*> s1;
+        stack<TreeNode*> s2;
+
+        while((!s1.empty() || p1 != NULL) && (!s2.empty() || p2 != NULL)){
+            if((p1 == NULL) ^ (p2 == NULL)){
                 return false;
-            if(p1->left != NULL){
-                t2.push(p2->left);
-                t1.push(p1->left);
             }
-            if(p1->right != NULL){
-                t1.push(p1->right);
-                t2.push(p2->right);
+            if(p1 != NULL){
+                if(p1->val != p2->val){
+                    return false;
+                }
+                s1.push(p1);
+                s2.push(p2);
+                p1 = p1->left;
+                p2 = p2->left;
+            }
+            else{
+                p1 = s1.top();
+                s1.pop();
+                p2 = s2.top();
+                s2.pop();
+                p1 = p1->right;
+                p2 = p2->right;
             }
         }
-        if(!t1.empty() || !t2.empty())
+
+        if(s1.empty() ^ s1.empty()){
             return false;
-        else
-            return true;
+        }
+
+        if((p1 == NULL) ^ (p2 == NULL)){
+            return false;
+        }
+
+        return true;
+
     }
 };
