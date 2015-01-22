@@ -6,72 +6,113 @@
  *     ListNode(int x) : val(x), next(NULL) {}
  * };
  */
- 
-#define LN ListNode*
-#define HEAP heap.begin(),heap.end()
-#define PB push_back
-#define INF 1000000
-
-struct node
-{
-	int val;
-	LN from;
-	
-	node(ListNode* n)
-	{
-		if ( n==NULL )
-		{
-			val=INF;
-		}
-		else
-		{
-			val=n->val;
-		}			
-		from=n;
-	}
-	bool operator<(const node& other)const
-	{
-		return val<other.val;
-	}
-	bool operator>(const node& other)const
-	{
-		return val>other.val;
-	}
-};
-    
 class Solution {
+private:
+	int buildHeap(vector<ListNode *> &heap, vector<ListNode *> lists){
+		int heapSize = 0;
+		for(int i = 0; i < lists.size(); i++){
+			if(lists[i] == NULL){
+				continue;
+			}
+			heapSize++;
+			heap.insert(heap.begin(), lists[i]);
+			adjustHeap(heap, heapSize);
+		}
+		return heapSize;
+	}
+	void adjustHeap(vector<ListNode *> &heap, int heapSize){
+		int cur = 0;
+		while(cur < heapSize){
+			int left = cur * 2 + 1;
+			int right = cur * 2 + 2;
+			if(right < heapSize){
+				if(heap[left]->val <= heap[right]->val){
+					if(heap[left]->val <= heap[cur]->val){
+						ListNode *tmp = heap[cur];
+						heap[cur] = heap[left];
+						heap[left] = tmp;
+						cur = left;
+					}
+					else if(heap[right]->val <= heap[cur]->val){
+						ListNode *tmp = heap[cur];
+						heap[cur] = heap[right];
+						heap[right] = tmp;
+						cur = right;
+					}
+					else{
+						break;
+					}
+				}
+				else{
+					if(heap[right]->val <= heap[cur]->val){
+						ListNode *tmp = heap[cur];
+						heap[cur] = heap[right];
+						heap[right] = tmp;
+						cur = right;
+					}
+					else if(heap[left]->val <= heap[cur]->val){
+						ListNode *tmp = heap[cur];
+						heap[cur] = heap[left];
+						heap[left] = tmp;
+						cur = left;
+					}
+					else{
+						break;
+					}
+				}
+			}
+			else if(left < heapSize){
+				if(heap[left]->val <= heap[cur]->val){
+					ListNode *tmp = heap[cur];
+					heap[cur] = heap[left];
+					heap[left] = tmp;
+					cur = left;
+				}
+				else{
+					break;
+				}
+			}
+			else{
+				break;
+			}
+		}
+	}
 public:
     ListNode *mergeKLists(vector<ListNode *> &lists) {
-        // Start typing your C/C++ solution below
-        // DO NOT write int main() function
+
+        ListNode *newList = new ListNode(0);
+        int len = lists.size();
+
+        if(len <= 0){
+        	return newList->next;
+        }
+
+        vector<ListNode *> heap(len);
+        int heapSize = buildHeap(heap, lists);
+
+        ListNode *n = newList;
+        while(heapSize > 0){
+        	ListNode *cur = heap[0];
+        	n->next = cur;
+        	n = cur;
+        	if(cur->next == NULL){
+        		if(heapSize == 1){
+        			break;
+        		}
+        		else{
+        			heap[0] = heap[heapSize - 1];
+        			heap[heapSize - 1] = NULL;
+        			heapSize--;
+        		}
+        	}
+        	else{
+        		heap[0] = cur->next;
+        	}
+        	adjustHeap(heap, heapSize);
+        }
         
-        if (lists.empty()) return NULL;
-	int n= lists.size();
-	vector<node> heap;
-	heap.reserve(n);
-	for( int i=0;i<n;i++)
-		heap.PB(node(lists[i]));
-	make_heap(HEAP,greater<node>());
-	LN head= new ListNode(0);
-	LN pL = head;
-	pop_heap(HEAP,greater<node>());
-	node small=heap.back();
-	heap.pop_back();
-	while(small.val!=INF)
-	{
-		LN next=small.from->next;
-		pL->next=small.from;
-		small.from->next=NULL;
-		pL=pL->next;
+        n->next = NULL;
 
-		heap.PB(node(next));
-		push_heap(HEAP,greater<node>());
-		pop_heap(HEAP,greater<node>());
-		small=heap.back();
-		heap.pop_back();
-	}
-
-	LN ret=head->next;
-	delete head;
-	return ret;    }
+        return newList->next;
+    }
 };
