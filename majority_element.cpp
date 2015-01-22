@@ -12,9 +12,6 @@ public:
             }
             else{
                 majority == num[i] ? count++ : count--;
-                if(count >= len/2 + 1){
-                    return majority;
-                }
             }
         }
         return majority;
