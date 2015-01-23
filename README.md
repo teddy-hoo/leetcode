@@ -7,3 +7,4 @@ dp - dynamic programming
 bt - backtracking
 rc - recurion
 dc - divide and conquer
+ht - hash table

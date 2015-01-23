@@ -15,10 +15,26 @@ private:
 				continue;
 			}
 			heapSize++;
-			heap.insert(heap.begin(), lists[i]);
-			adjustHeap(heap, heapSize);
+			insertHeap(heap, lists[i], heapSize);
 		}
 		return heapSize;
+	}
+	void insertHeap(vector<ListNode *> &heap, ListNode *newNode, int heapSize){
+		heap.push_back(newNode);
+		int cur = heapSize - 1;
+		int parent = (cur - 1) / 2;
+		while(cur >= 1){
+			if(heap[parent]->val > heap[cur]->val){
+				ListNode *tmp = heap[cur];
+				heap[cur] = heap[parent];
+				heap[parent] = tmp;
+				cur = parent;
+				parent = (cur - 1) / 2;
+			}
+			else{
+				break;
+			}
+		}
 	}
 	void adjustHeap(vector<ListNode *> &heap, int heapSize){
 		int cur = 0;
@@ -26,14 +42,14 @@ private:
 			int left = cur * 2 + 1;
 			int right = cur * 2 + 2;
 			if(right < heapSize){
-				if(heap[left]->val <= heap[right]->val){
-					if(heap[left]->val <= heap[cur]->val){
+				if(heap[left]->val < heap[right]->val){
+					if(heap[left]->val < heap[cur]->val){
 						ListNode *tmp = heap[cur];
 						heap[cur] = heap[left];
 						heap[left] = tmp;
 						cur = left;
 					}
-					else if(heap[right]->val <= heap[cur]->val){
+					else if(heap[right]->val < heap[cur]->val){
 						ListNode *tmp = heap[cur];
 						heap[cur] = heap[right];
 						heap[right] = tmp;
@@ -44,13 +60,13 @@ private:
 					}
 				}
 				else{
-					if(heap[right]->val <= heap[cur]->val){
+					if(heap[right]->val < heap[cur]->val){
 						ListNode *tmp = heap[cur];
 						heap[cur] = heap[right];
 						heap[right] = tmp;
 						cur = right;
 					}
-					else if(heap[left]->val <= heap[cur]->val){
+					else if(heap[left]->val < heap[cur]->val){
 						ListNode *tmp = heap[cur];
 						heap[cur] = heap[left];
 						heap[left] = tmp;
@@ -62,7 +78,7 @@ private:
 				}
 			}
 			else if(left < heapSize){
-				if(heap[left]->val <= heap[cur]->val){
+				if(heap[left]->val < heap[cur]->val){
 					ListNode *tmp = heap[cur];
 					heap[cur] = heap[left];
 					heap[left] = tmp;
@@ -87,7 +103,7 @@ public:
         	return newList->next;
         }
 
-        vector<ListNode *> heap(len);
+        vector<ListNode *> heap;
         int heapSize = buildHeap(heap, lists);
 
         ListNode *n = newList;
