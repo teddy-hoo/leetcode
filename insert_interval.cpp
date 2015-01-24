@@ -7,40 +7,39 @@
  *     Interval(int s, int e) : start(s), end(e) {}
  * };
  */
- 
-#define EDGE -99999
 class Solution {
 public:
     vector<Interval> insert(vector<Interval> &intervals, Interval newInterval) {
-        vector<Interval> newlist;
+        
+        int len = intervals.size();
+        vector<Interval> newIntervals;
+        
+        if(len <= 0){
+            return newIntervals;
+        }
+        
         bool pushed = false;
-        Interval merged(newInterval.start, newInterval.end);
-        for(int i = 0; i < intervals.size(); ++i){
+        for(int i = 0; i < len; i++){
             if(intervals[i].end < newInterval.start){
-                newlist.push_back(intervals[i]);
+                newIntervals.push_back(intervals[i]);
                 continue;
             }
             if(intervals[i].start > newInterval.end){
-                if(merged.start == EDGE){
-                    merged.start = newInterval.start;
-                }
-                if(merged.end == EDGE){
-                    merged.end = newInterval.end;
-                }
                 if(!pushed){
-                    newlist.push_back(merged);
+                    newIntervals.push_back(newInterval);
                     pushed = true;
                 }
-                newlist.push_back(intervals[i]);
+                newIntervals.push_back(intervals[i]);
                 continue;
             }
-            
-            merged.start = intervals[i].start < merged.start ? intervals[i].start : merged.start;
-            merged.end = intervals[i].end > merged.end ? intervals[i].end : merged.end;
+            newInterval.start = newInterval.start < intervals[i].start ? newInterval.start : intervals[i].start;
+            newInterval.end = newInterval.end > intervals[i].end ? newInterval.end : intervals[i].end;
         }
+        
         if(!pushed){
-            newlist.push_back(merged);
+            newIntervals.push_back(newInterval);
         }
-        return newlist;
+        
+        return newIntervals;
     }
 };
