@@ -3,8 +3,11 @@ leetcode
 
 The C++ code of LEETCODE problems.
 
-dp - dynamic programming
-bt - backtracking
-rc - recurion
-dc - divide and conquer
-ht - hash table
+### shotcut for algorightm or technology:
+1. dp - dynamic programming
+1. bt - backtracking
+1. rc - recurion
+1. dc - divide and conquer
+1. ht - hash table
+1. tp - two pointer
+1. na - naive
