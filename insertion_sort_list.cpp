@@ -10,32 +10,36 @@ class Solution {
 public:
     ListNode *insertionSortList(ListNode *head) {
         
-        if(head == NULL || head->next == NULL){
+        if(head == NULL){
             return head;
         }
         
-        ListNode* preHead = new ListNode(0);
-        ListNode* pre;
-        ListNode* p;
-        ListNode* tmp;
-        ListNode* cur = head;
-        while(cur){
-            for(pre = preHead, p = preHead->next; p != NULL; pre = pre->next, p = p->next){
-                if(p->val > cur->val){
-                    tmp = cur->next;
-                    pre->next = cur;
-                    cur->next = p;
-                    cur = tmp;
-                    break;
-                }
+        ListNode *newHead = new ListNode(0);
+        
+        newHead->next = head;
+        
+        ListNode *pre = head;
+        ListNode *cur = head->next;
+        
+        while(cur != NULL){
+            ListNode *p = newHead;
+            ListNode *c = newHead->next;
+            while(c != cur && c->val < cur->val){
+                p = p->next;
+                c = c->next;
             }
-            if(p == NULL){
-                tmp = cur->next;
-                pre->next = cur;
-                cur->next = NULL;
-                cur = tmp;
+            if(c != cur){
+                pre->next = cur->next;
+                p->next = cur;
+                cur->next = c;
+                cur = pre->next;
+            }
+            else{
+                pre = pre->next;
+                cur = cur->next;
             }
         }
-        return preHead->next;
+        
+        return newHead->next;
     }
 };
