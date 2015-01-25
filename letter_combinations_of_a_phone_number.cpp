@@ -1,23 +1,37 @@
+/**
+ * breadth first search algorithm
+ * time:   O(3^n)
+ * space:  O(3^n)
+ * date:   25-01-2015
+ * author: Teddy
+ */
+
 class Solution {
 public:
     vector<string> letterCombinations(string digits) {
+        
         int len = digits.size();
         vector<string> results;
         results.push_back("");
+        
         if(len <= 0){
             return results;
         }
-        string characters[8] = {"abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+        
+        // the characters on each phone number
+        string characters[8] = {"abc", "def", "ghi", "jkl", 
+                                "mno", "pqrs", "tuv", "wxyz"};
+        
         for(int i = 0; i < len; i++){
-            vector<string> tmp;
-            int index = digits[i] - '2';
-            string curStr = characters[index];
-            for(int j = 0; j < curStr.size(); j++){
-                for(int k = 0; k < results.size(); k++){
-                    tmp.push_back(results[k] + curStr[j]);
+            string chars = characters[digits[i] - '2'];
+            int before = results.size();
+            vector<string> newResults;
+            for(int j = 0; j < chars.size(); j++){
+                for(int k = 0; k < before; k++){
+                    newResults.push_back(results[k] + chars[j]);
                 }
             }
-            results = tmp;
+            results = newResults;
         }
         return results;
     }
