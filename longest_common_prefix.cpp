@@ -1,36 +1,38 @@
+/**
+ * a simple string problem
+ * time:   O(nm)
+ * space:  O(0)
+ * date:   25-01-2015
+ * author: Teddy
+ */
+
+
 class Solution {
 public:
     string longestCommonPrefix(vector<string> &strs) {
-    	string result;
-        if(strs.size() == 0){
-        	return result;
-        }
         int len = strs.size();
-        int i, j;
-        vector<char> prefix;
-        vector<int> countPrefix;
-        for(i = 0; i < len; ++i){
-        	for(j = 0; j < strs[i].length(); ++j){
-        		if(j < prefix.size()){
-        			if(prefix[j] != strs[i][j]){
-        				break;
-        			}
-        			else{
-        				++countPrefix[j];
-        			}
-        		}
-        		else{
-        			prefix.push_back(strs[i][j]);
-        			countPrefix.push_back(1);
-        		}
-        	}
+        
+        if(len <= 0){
+            return "";
         }
-        if(countPrefix.size() > 0){
-        	for(i = 0; countPrefix[i] == len; ++i);
-        	if(i){
-        		result = strs[0].substr(0, i);
-        	}
-        }        
-        return result;
+        
+        int length = 0;
+        bool isPrefix = true;
+        while(isPrefix){
+            if(length >= strs[0].size()){
+                break;
+            }
+            char p = strs[0][length];
+            for(int i = 1; i < len; i++){
+                if(length >= strs[i].size() || strs[i][length] != p){
+                    isPrefix = false;
+                    length--;
+                    break;
+                }
+            }
+            length++;
+        }
+        
+        return length > 0 ? strs[0].substr(0, length) : "";
     }
 };
