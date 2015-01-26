@@ -20,6 +20,12 @@
  * end of BFS:    queue empty or reach the end string.
  * an extra step: return the results.
  */
+
+/**
+ * I create a hash to store the words, so the path can describe by indices which
+ * are intergers, this strategy will reduce the space from string to integer, but
+ * still memory limit exceeded. This is really a hard problem.
+ */
  
 class Solution {
 private:
