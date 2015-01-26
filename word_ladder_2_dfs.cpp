@@ -1,6 +1,9 @@
 /**
- * This is the document created by Lingchuan Hu.
- * For Facebook interview
+ * depth   first search algorithm
+ * time:   depends on the pruning
+ * space:  depends on the pruning
+ * date:   26-01-2015
+ * author: Teddy
  */
 
 /**
@@ -11,10 +14,10 @@
  */
  
 /**
- * use BFS
- * state of BFS: dict, used, curPath, results, min
- * start of BFS: dict, NULL, "hit", NULL
- * end of BFS  : the length of curPath, is bigger than min or all words are used.
+ * use DFS
+ * state of DFS: dict, used, curPath, results, min
+ * start of DFS: dict, NULL, "hit", NULL
+ * end of DFS  : the length of curPath, is bigger than min or all words are used.
  * an extra step: remove the resuts whose length is bigger than min.
  */
  
