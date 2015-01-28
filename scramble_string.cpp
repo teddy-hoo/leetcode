@@ -1,57 +1,89 @@
+/**
+ * backtracking algorithm
+ * date:   28-01-2015
+ * author: Teddy
+ */
+ 
+/**
+ *    "great"
+ *     great
+ *     /   \
+ *    gr   eat
+ *   / \   / \
+ * "great" & "rgtae"
+ * sort(gr) == sort(rg)
+ * sort(eat) == sort(tae)
+ * 01, 24   compare with 01, 24 02, 34
+ * 02, 34   compare with 02, 34 01, 24
+ */
+
+/**
+ * Time: T(n) = 2T(n/2) + O(nlogn); O(nlognlogn)
+ * Space: o(n)
+ */
+ 
 class Solution {
 private:
-    bool determineScrambleOrNot(string s1, string s2, int begin1, int end1, int &begin2, int &end2){
-        if(begin1 == end1){
-            begin2 = s2.find(s1[begin1]);
-            if(begin2 < 0){
-                return false;
+    string str1;
+    string str2;
+private:
+    bool compareSubstr(int b1, int e1, int b2, int e2, int half, int len){
+        string sub11 = str1.substr(b1, half);
+        string sub12 = str1.substr(e1, len - half);
+        string sub21 = str2.substr(b2, half);
+        string sub22 = str2.substr(e2, len - half);
+        sort(sub11.begin(), sub11.end());
+        sort(sub12.begin(), sub12.end());
+        sort(sub21.begin(), sub21.end());
+        sort(sub22.begin(), sub22.end());
+        if(sub11 == sub21 && sub12 == sub22){
+            return true;
+        }
+        return false;
+    }
+    bool compare( int b1, int b2, int len){
+        
+        if(len == 1){
+            return str1[b1] == str2[b2] ? true : false;
+        }
+
+        bool result = false;
+        
+        for(int half = 1; half < len; half++){
+            
+            if(compareSubstr(b1, b1 + half, b2, b2 + half, half, len)){
+                result = compare(b1, b2, half) &&
+                         compare(b1 + half, b2 + half, len - half);
             }
-            end2 = begin2;
-            return true;
-        }
-        int middle = (begin1 + end1 + 1) / 2;
-        int cbegin1 = -1;
-        int cend1 = -1;
-        int cbegin2 = -1;
-        int cend2 = -1;
-        
-        if(!determineScrambleOrNot(s1, s2, begin1, middle - 1, cbegin1, cend1)){
-            return false;
-        }
-        if(!determineScrambleOrNot(s1, s2, middle, end1, cbegin2, cend2)){
-            return false;
-        }
-        
-        if(cend1 + 1 == cbegin2){
-            begin2 = cbegin1;
-            end2 = cend2;
-            return true;
-        }
-        else if(cend2 + 1 == cbegin1){
-            begin2 = cbegin2;
-            end2 = cend1;
-            return true;
+
+            if(result){
+                return true;
+            }
+            
+            if(compareSubstr(b1, b1 + half, b2 + len - half, b2, half, len)){
+                result = compare(b1, b2 + len - half, half) &&
+                         compare(b1 + half, b2, len - half);
+            }
+
+            if(result){
+                return true;
+            }
+
         }
         
         return false;
-        
     }
 public:
     bool isScramble(string s1, string s2) {
+        int len = s1.size();
         
-        int len1 = s1.size();
-        int len2 = s2.size();
-        
-        if(len1 != len2){
-            return false;
-        }
-        
-        int begin = -1;
-        int end = -1;
-        determineScrambleOrNot(s1, s2, 0, len1 - 1, begin, end);
-        if(begin == 0 && end == len1 - 1){
+        if(len <= 0){
             return true;
         }
-        return false;
+        
+        str1 = s1;
+        str2 = s2;
+        
+        return compare(0, 0, len);
     }
 };
