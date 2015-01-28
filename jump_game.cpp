@@ -1,5 +1,5 @@
 /**
- * Greedt algorithm
+ * Greedy algorithm
  * Time: O(n)
  * Space: O(1)
  * Author: Teddy

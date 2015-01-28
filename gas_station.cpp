@@ -1,22 +1,40 @@
+/**
+ * Greedy algorithm
+ * Time: O(n)
+ * Space: O(1)
+ * Author: Teddy
+ * Date: 28-1-2015
+ */
+
 class Solution {
 public:
     int canCompleteCircuit(vector<int> &gas, vector<int> &cost) {
-        if(gas.size() == 0 || 
-           cost.size() == 0 || 
-           gas.size() != cost.size()){
-               return -1;
-           }
-        int total = 0;
-        int sum = 0;
-        int start = 0;
-        for(int i = 0; i < gas.size(); ++i){
-            total += (gas[i] - cost[i]);
-            if(sum < 0){
-                sum = (gas[i] - cost[i]);
-                start = i;
-            }else
-                sum += (gas[i] - cost[i]);
+        
+        int len = gas.size();
+        if(len <= 0){
+            return -1;
         }
-        return total < 0 ? -1 : start;
+        
+        int totalGas = 0;
+        
+        int startStation;
+        int leftGas = 0;
+        
+        for(int i = 0; i < len; i++){
+            totalGas += gas[i] - cost[i];
+            if(leftGas <= 0){
+                startStation = i;
+                leftGas = gas[i] - cost[i];
+            }
+            else{
+                leftGas += gas[i] - cost[i];
+            }
+        }
+        
+        if(totalGas >= 0){
+            return startStation;
+        }
+        
+        return -1;
     }
 };
