@@ -1,26 +1,50 @@
+/**
+ * Greedy algorithm
+ * Time:   O(n)
+ * Space:  O(1)
+ * Author: Teddy
+ * Date:   29-01-2015
+ */
+
+/**
+ * compare current step count with left distance.
+ * 7 1 9 2 3 9 1 2 3 4 5 6 2 1 2 
+ */
+
+
 class Solution {
 public:
     int jump(int A[], int n) {
-        if(n == 1)
+        
+        if(n <= 0){
             return 0;
-        int step = 1;
-        int cur_len = A[0];
-        int max_len = cur_len, max_pos = cur_len;
-        for(int cur = 1; cur < n;){
-            if(cur == cur_len + 1){
-                cur_len = max_pos + A[max_pos];
-                cur = max_pos + 1;
-                max_len = cur_len;
-                max_pos = cur_len;
-                step++;
-                continue;
+        }      
+        
+        int steps = 1;
+        int currentStep = A[0];
+        int maxSteps = 0;
+        int maxIndex = 0;
+        bool reached = false;
+        for(int i = 1; i < n; i++){
+            currentStep--;
+            if(currentStep >= n - i - 1){
+                reached = true;
+                break;
             }
-            if(A[cur] + cur > max_len){
-                max_len = A[cur] + cur;
-                max_pos = cur;
+            // use >= operator will save a little time, 
+            // which will select the last one when there are multiple equal
+            // steps
+            if(A[i] + i >= maxSteps){
+                maxSteps = A[i] + i;
+                maxIndex = i;
             }
-            cur++;
+            if(currentStep == 0){
+                i = maxIndex;
+                currentStep = A[maxIndex];
+                steps++;
+            }
         }
-        return step;
+        
+        return reached ? steps : 0;
     }
 };
