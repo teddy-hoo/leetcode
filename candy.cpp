@@ -1,29 +1,47 @@
+/**
+ * Greey algorithm
+ * Time:   O(n)
+ * Space:  O(n)
+ * Author: Teddy
+ * Date:   29-01-2015
+ */
+
+/**
+ * two round traversal, asscending order and descending order
+ * 1 2 3 2 1 4 5 8 1 4 9 2
+ */
+
 class Solution {
 public:
     int candy(vector<int> &ratings) {
-        int  size = ratings.size();
-        int* candy = new int[size];
-        fill(candy , candy + size , 0);
-         
-        int k = 1;
-        for(int i = 1 ; i < size ; i++){
-            if(ratings[i] > ratings[i - 1]){
-                candy[i] = k++;
-            }else{
-                k = 1;
+        
+        int len = ratings.size();
+        
+        if(len <= 0){
+            return 0;
+        }
+        
+        int total = 0;
+        vector<int> candies(len, 0);
+    
+        candies[0] = 1;
+        total++;
+        
+        // assending order traversal
+        for(int i = 1; i < len; i++){
+            candies[i] = ratings[i] > ratings[i - 1] ? candies[i - 1] + 1 : 1;
+            total += candies[i];
+        }
+        
+        // descending order traversal
+        for(int i = len - 2; i >= 0; i--){
+            if(ratings[i] > ratings[i + 1] && candies[i] <= candies[i + 1]){
+                int increasement = candies[i + 1] - candies[i] + 1;
+                candies[i] += increasement;
+                total += increasement;
             }
         }
-        k = 1;
-        for(int i = size -2 ; i >= 0 ; i --){
-            if(ratings[i] > ratings[i + 1]){
-                candy[i] = max(k++ , candy[i]);
-            }else{
-                k = 1;
-            }
-        }
-        int ans = size;
-        for(int i = 0 ; i < size ; i++) ans += candy[i];
-         
-        return ans;
+        
+        return total;
     }
 };

@@ -1,7 +1,7 @@
 leetcode
 ========
 
-The C++ code of LEETCODE problems.
+## The C++ code of LEETCODE problems.
 
 ### shotcut for algorightm or technology:
 1. dp - dynamic programming
@@ -11,3 +11,4 @@ The C++ code of LEETCODE problems.
 1. ht - hash table
 1. tp - two pointer
 1. na - naive
+1. gd - greedy
