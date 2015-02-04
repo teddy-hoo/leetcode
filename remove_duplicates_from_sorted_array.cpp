@@ -1,16 +1,24 @@
+/**
+ * Naive solution
+ * Time:   O(n)
+ * Space:  O(1)
+ * Author: Teddy
+ * Date:   04-02-2015
+ */
+
 class Solution {
 public:
     int removeDuplicates(int A[], int n) {
-        if(n <= 0)
-            return 0;
-        int indexa = 1;
-        int indexn = 0;
-        for(; indexa < n; indexa++){
-            if(A[indexa] == A[indexn])
-                continue;
-            else
-                A[++indexn] = A[indexa];
+
+        int real = 0;
+        
+        for(int i = 0; i < n; i++){
+            while(i < n - 1 && A[i] == A[i + 1]){
+                i++;
+            }
+            A[real++] = A[i];
         }
-        return indexn + 1;
+        
+        return real;
     }
 };
