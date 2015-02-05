@@ -1,4 +1,12 @@
 /**
+ * Naive solution
+ * Time:   O(n)
+ * Space:  O(n)
+ * Author: Teddy
+ * Date:   05-02-2015
+ */
+
+/**
  * Definition for singly-linked list.
  * struct ListNode {
  *     int val;
