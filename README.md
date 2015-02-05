@@ -3,7 +3,7 @@ leetcode
 
 ## The C++ code of LEETCODE problems.
 
-### shotcut for algorightm or technology:
+### shortcut for algorightm or technology:
 1. dp - dynamic programming
 1. bt - backtracking
 1. rc - recurion
